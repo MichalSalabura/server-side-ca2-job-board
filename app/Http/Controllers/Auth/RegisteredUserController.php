@@ -42,11 +42,18 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        // auto create employer
         if ($user->role === 'employer') {
             EmployerProfile::create([
                 'user_id' => $user->id,
                 'company_name' => 'New Company'
             ]);
+        }
+
+        // redirect to employer dashboard
+        if ($user->role === 'employer') {
+            return redirect('/employer/dashboard');
         }
 
         event(new Registered($user));
