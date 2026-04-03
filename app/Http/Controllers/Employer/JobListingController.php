@@ -42,16 +42,27 @@ class JobListingController extends Controller
 
     public function show(JobListing $jobListing)
     {
+        if ($jobListing->user_id !== auth()->id()) {
+            abort(403);
+        }
         return view('employer.job-listings.show', compact('jobListing'));
     }
 
     public function edit(JobListing $jobListing)
     {
+        if ($jobListing->user_id !== auth()->id()) {
+            abort(403);
+        }
         return view('employer.job-listings.edit', compact('jobListing'));
     }
 
     public function update(Request $request, JobListing $jobListing)
     {
+
+        if ($jobListing->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -67,6 +78,10 @@ class JobListingController extends Controller
 
     public function destroy(JobListing $jobListing)
     {
+        if ($jobListing->user_id !== auth()->id()) {
+            abort(403);
+        }
+        
         $jobListing->delete();
         return redirect()->route('job-listings.index')->with('success', 'Job listing deleted.');
     }
