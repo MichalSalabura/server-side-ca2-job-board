@@ -35,6 +35,7 @@
     <nav>
         <a href="{{ route('job-listings.index') }}">My Job Listings</a> |
         <a href="{{ route('job-listings.create') }}">Post New Job</a> |
+        <a href="{{ route('employer.profile.edit') }}">Edit Company Profile</a> |
         <form method="POST" action="{{ route('logout') }}" style="display:inline">
             @csrf
             <button type="submit">Logout</button>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\JobListingController;
+use App\Http\Controllers\Employer\EmployerProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,6 +22,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'employer'])->group(function () {
     Route::get('/employer/dashboard', [DashboardController::class, 'index'])->name('employer.dashboard');
+    Route::get('/employer/profile/edit', [EmployerProfileController::class, 'edit'])->name('employer.profile.edit');
+    Route::patch('/employer/profile', [EmployerProfileController::class, 'update'])->name('employer.profile.update');
     Route::resource('job-listings', JobListingController::class);
 });
 
