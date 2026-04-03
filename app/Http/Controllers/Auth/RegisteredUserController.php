@@ -52,14 +52,14 @@ class RegisteredUserController extends Controller
             ]);
         }
 
+        event(new Registered($user));
+
+        Auth::login($user);
+
         // redirect to employer dashboard
         if ($user->role === 'employer') {
             return redirect('/employer/dashboard');
         }
-
-        event(new Registered($user));
-
-        Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
     }
