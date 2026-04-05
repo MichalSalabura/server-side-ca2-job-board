@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-start mb-2">
             <div>
                 <h5 class="fw-bold mb-1">{{ $jobListing->title }}</h5>
-                <p class="text-muted mb-1" style="font-size:13px">{{ auth()->user()->employerProfile->company_name }}</p>
+                <p class="text-muted mb-1" style="font-size:13px">{{ $jobListing->company_name }}</p>
             </div>
             <span class="badge {{ $jobListing->status === 'open' ? 'bg-success' : 'bg-secondary' }}">
                 {{ $jobListing->status }}
@@ -25,6 +25,12 @@
         <hr>
 
         <p style="font-size:13px">{{ $jobListing->description }}</p>
+
+        <div class="mt-3">
+            <a href="{{ route('job-listings.applications', $jobListing) }}" class="btn btn-purple w-100">
+                View Applications
+            </a>
+        </div>
     </div>
 
     <div class="d-flex gap-2">
