@@ -1,46 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.employer')
+@section('title', 'Dashboard')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Employer Dashboard</title>
-</head>
+@section('content')
+    <h5 class="fw-bold mb-3">Your Listings</h5>
 
-<body>
-    <h1>Employer Dashboard</h1>
-    <p>Welcome, {{ auth()->user()->name }}</p>
-    <p>Company: {{ auth()->user()->employerProfile->company_name ?? 'Not set' }}</p>
+    {{-- Search bar --}}
+    <div class="input-group mb-3">
+        <span class="input-group-text bg-white"><i>🔍</i></span>
+        <input type="text" class="form-control" placeholder="Search listings...">
+    </div>
 
-    <hr>
-
-    <h2>Overview</h2>
-    <p>Total Job Listings: <strong>{{ $jobCount }}</strong></p>
-
-    <h2>Recent Listings</h2>
-    @if ($recentJobs->isEmpty())
-        <p>No job listings yet.</p>
-    @else
-        <ul>
-            @foreach ($recentJobs as $job)
-                <li>
-                    <a href="{{ route('job-listings.show', $job) }}">{{ $job->title }}</a>
-                    — {{ $job->location }} ({{ $job->type }}) — {{ $job->status }}
-                </li>
-            @endforeach
-        </ul>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <hr>
+    <p class="text-muted">Total listings: <strong>{{ $jobCount }}</strong></p>
 
-    <nav>
-        <a href="{{ route('job-listings.index') }}">My Job Listings</a> |
-        <a href="{{ route('job-listings.create') }}">Post New Job</a> |
-        <a href="{{ route('employer.profile.edit') }}">Edit Company Profile</a> |
-        <form method="POST" action="{{ route('logout') }}" style="display:inline">
-            @csrf
-            <button type="submit">Logout</button>
-        </form>
-    </nav>
-</body>
+    {{-- Job cards grid --}}
+    <div class="row g-3">
+        @if($recentJobs->isEmpty())
+            <div class="col-12">
+                <p class="text-muted text-center">No job listings yet.</p>
+            </div>
+        @else
+            @foreach($recentJobs as $job)
+            <div class="col-6">
+                <div class="job-card h-100">
+                    <p class="fw-bold mb-1" style="font-size:14px">{{ $job->title }}</p>
+                    <p class="text-muted mb-1" style="font-size:12px">{{ $job->location }}</p>
+                    <span class="badge mb-2" style="background-color: var(--purple); font-size:10px">{{ $job->type }}</span>
+                    <div class="mt-2 d-flex gap-1">
+                        <a href="{{ route('job-listings.edit', $job) }}" class="btn btn-sm btn-outline-purple" style="font-size:11px">Edit</a>
+                        <a href="{{ route('job-listings.show', $job) }}" class="btn btn-sm btn-purple" style="font-size:11px">View</a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        @endif
+    </div>
 
-</html>
+    <div class="mt-4">
+        <a href="{{ route('job-listings.create') }}" class="btn btn-purple w-100">+ Post New Job</a>
+    </div>
+@endsection
