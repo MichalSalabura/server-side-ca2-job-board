@@ -5,10 +5,12 @@ use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\JobListingController;
 use App\Http\Controllers\Employer\EmployerProfileController;
 use App\Http\Controllers\Employer\ApplicationController;
+use App\Models\JobListing;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $jobs = JobListing::where('status', 'open')->latest()->get();
+    return view('home', compact('jobs'));
 });
 
 Route::get('/dashboard', function () {
