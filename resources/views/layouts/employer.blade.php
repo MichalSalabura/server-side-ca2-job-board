@@ -109,7 +109,14 @@
             Menu
         </button>
         <span class="fw-bold" style="color: var(--purple)">JobBoard</span>
-        <a href="{{ route('employer.profile.edit') }}" class="btn btn-sm btn-outline-purple">Profile</a>
+        <div class="d-flex align-items-center gap-2">
+            @if(isset($newApplications) && $newApplications > 0)
+                <span class="badge rounded-pill" style="background-color: var(--purple)">
+                    {{ $newApplications }} new
+                </span>
+            @endif
+            <a href="{{ route('employer.profile.edit') }}" class="btn btn-sm btn-outline-purple">Profile</a>
+        </div>
     </nav>
 
     {{-- Sidebar --}}
@@ -136,4 +143,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
