@@ -30,6 +30,7 @@ class JobListingController extends Controller
 
         JobListing::create([
             'user_id' => auth()->id(),
+            'company_name',
             'title' => $request->title,
             'description' => $request->description,
             'location' => $request->location,
@@ -81,7 +82,7 @@ class JobListingController extends Controller
         if ($jobListing->user_id !== auth()->id()) {
             abort(403);
         }
-        
+
         $jobListing->delete();
         return redirect()->route('job-listings.index')->with('success', 'Job listing deleted.');
     }

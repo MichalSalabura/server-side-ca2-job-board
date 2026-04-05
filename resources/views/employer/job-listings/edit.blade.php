@@ -17,7 +17,7 @@
 
             <div class="mb-3">
                 <input type="text" name="company_name" class="form-control" placeholder="Company name"
-                    value="{{ auth()->user()->employerProfile->company_name }}" readonly>
+                    value="{{ auth()->user()->employerProfile->company_name }}">
             </div>
 
             <div class="mb-3">
