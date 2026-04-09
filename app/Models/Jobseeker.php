@@ -6,8 +6,8 @@ class Jobseeker extends Model
 {
     protected $fillable = [
         'user_id',
-        'name',
-        'email',
+        'display_name',
+        'display_email',
     ];    
 
     public function user()
