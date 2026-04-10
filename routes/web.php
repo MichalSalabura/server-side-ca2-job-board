@@ -6,6 +6,7 @@ use App\Http\Controllers\Employer\JobListingController;
 use App\Http\Controllers\Employer\EmployerProfileController;
 use App\Http\Controllers\Employer\ApplicationController;
 use App\Models\JobListing;
+use App\Http\Controllers\Jobseeker\JobseekerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,6 +30,12 @@ Route::middleware(['auth', 'employer'])->group(function () {
     Route::patch('/employer/profile', [EmployerProfileController::class, 'update'])->name('employer.profile.update');
     Route::resource('job-listings', JobListingController::class);
     Route::get('job-listings/{jobListing}/applications', [ApplicationController::class, 'index'])->name('job-listings.applications');
+});
+
+Route::middleware(['auth', 'jobseeker'])->group(function () {
+    Route::get('/jobseeker/profile/edit', [JobseekerController::class, 'edit'])->name('jobseeker.profile.edit');
+    Route::patch('/jobseeker/profile', [JobseekerController::class, 'update'])->name('jobseeker.profile.update');
+    Route::post('/job-listings/{jobListing}/apply', [JobseekerController::class, 'apply'])->name('job-listings.apply');
 });
 
 require __DIR__ . '/auth.php';
