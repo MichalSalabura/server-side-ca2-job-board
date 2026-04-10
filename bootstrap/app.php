@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'employer' => \App\Http\Middleware\EnsureUserIsEmployer::class,
+            'jobseeker' => \App\Http\Middleware\EnsureUserIsJobseeker::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
