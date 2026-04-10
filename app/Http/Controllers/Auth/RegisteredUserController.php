@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use App\Models\EmployerProfile;
+use App\Models\Jobseeker;
 
 class RegisteredUserController extends Controller
 {
@@ -49,6 +50,15 @@ class RegisteredUserController extends Controller
             EmployerProfile::create([
                 'user_id' => $user->id,
                 'company_name' => 'New Company'
+            ]);
+        }
+
+        // auto create jobseeker
+        if ($user->role === 'jobseeker') {
+            Jobseeker::create([
+                'user_id' => $user->id,
+                'display_name' => $request->name,
+                'display_email' => $request->email,
             ]);
         }
 
