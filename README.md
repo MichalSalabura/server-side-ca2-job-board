@@ -23,10 +23,11 @@ This project was developed as part of the Server Side CA2. The system allows emp
 
 **Job Seeker Side:**
 
--
--
-
----
+- Jobseeker registration & authentication
+- Jobseeker profile management
+- Jobseeker applications
+- Application CV and Cover letter modal
+- Application CV permissions and file handling
 
 ## Technologies Used
 
@@ -56,17 +57,20 @@ This project was developed as part of the Server Side CA2. The system allows emp
 
 ### Job Seeker Features
 
--
--
--
-
----
+- Register and login as jobseeker
+- Jobseeker dashboard with job listings
+- Custom CV and Cover Letter per application
+- View applications for each individual job listings
+- Edit job seeker profile (display Eame, display Email)
+- Route protection via middleware (Jobseeker-only access)
+- Authorization checks (jobseekers can only view their own applications, employers can only view applications to their job listing)
 
 ## Database Structure
 
 - `users` (with role: employer/jobseeker)
 - `employer_profiles`
 - `job_listings`
+- `jobseekers`
 - `applications`
 
 ### Relationships
