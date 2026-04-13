@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\JobListing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class JobseekerController extends Controller
 {
@@ -55,5 +56,34 @@ class JobseekerController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Application submitted successfully.');
+    }
+
+    public function applications()
+    {
+        $applications = Application::where('user_id', auth()->id())
+            ->with('jobListing')
+            ->latest()
+            ->paginate(10);
+
+        return view('jobseeker.applications.index', compact('applications'));
+    }
+
+    public function viewCV(Application $application)
+    {
+        // checks the application belongs to the right user
+        if ($application->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to CV file.');
+        }
+
+        // checks if the file exists
+        if (!$application->cv_path || !Storage::disk('public')->exists($application->cv_path)) {
+            abort(404, 'CV file not found.');
+        }
+
+        // gets the file path
+        $filePath = Storage::disk('public')->path($application->cv_path);
+
+        // returns the file
+        return response()->file($filePath);
     }
 }

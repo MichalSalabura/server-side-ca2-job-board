@@ -119,7 +119,7 @@
                         </div>
                         <span class="badge" style="background-color: var(--purple); font-size:10px">{{ $job->type }}</span>
                     </div>
-                    <p style="font-size:12px" class="mt-2 mb-2">{{ Str::limit($job->description, 80) }}</p>
+                    <p style="font-size:12px" class="mt-2 mb-2">{{ \Illuminate\Support\Str::limit($job->description, 80) }}</p>
                     @auth
                         <a href="#" class="btn btn-sm btn-purple">Apply Now</a>
                     @else

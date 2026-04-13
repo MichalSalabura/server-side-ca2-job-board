@@ -32,7 +32,7 @@
 
                 @if($application->cv_path)
                     <hr>
-                    <a href="{{ asset('storage/' . $application->cv_path) }}" class="btn btn-outline-purple btn-sm" target="_blank">
+                    <a href="{{ route('employer.cv.view', [$jobListing, $application]) }}" class="btn btn-outline-purple btn-sm" target="_blank">
                         View CV
                     </a>
                 @endif
