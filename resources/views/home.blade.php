@@ -73,9 +73,10 @@
                     <hr style="border:none; border-top:1px solid #e5e7eb; margin:12px 0;">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" style="display:flex; align-items:center; gap:10px; padding:12px 16px;
-                                                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
-                                                                                            width:100%; cursor:pointer;">
+                        <button type="submit"
+                            style="display:flex; align-items:center; gap:10px; padding:12px 16px;
+                                                                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
+                                                                                                            width:100%; cursor:pointer;">
                             🚪 Log out
                         </button>
                     </form>
@@ -156,6 +157,22 @@
                                 @else
                                     <a href="{{ route('login') }}" class="apply-btn">Login to Apply</a>
                                 @endauth
+                            </div>
+                            <div style="display:flex; gap:6px; margin-top:8px;">
+                                <a href="https://wa.me/?text={{ urlencode($job->title . ' at ' . $job->company_name . ' - ' . url('/')) }}"
+                                    target="_blank"
+                                    style="background:#25D366; color:white; border-radius:20px; padding:3px 10px; font-size:11px; text-decoration:none; font-weight:600;">
+                                    WhatsApp
+                                </a>
+                                <a href="mailto:?subject={{ urlencode($job->title . ' at ' . $job->company_name) }}&body={{ urlencode('Check out this job: ' . url('/')) }}"
+                                    style="background:#6C63FF; color:white; border-radius:20px; padding:3px 10px; font-size:11px; text-decoration:none; font-weight:600;">
+                                    Email
+                                </a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/')) }}"
+                                    target="_blank"
+                                    style="background:#0077B5; color:white; border-radius:20px; padding:3px 10px; font-size:11px; text-decoration:none; font-weight:600;">
+                                    LinkedIn
+                                </a>
                             </div>
                         </div>
                     @endforeach
