@@ -75,8 +75,8 @@
                         @csrf
                         <button type="submit"
                             style="display:flex; align-items:center; gap:10px; padding:12px 16px;
-                                                                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
-                                                                                                            width:100%; cursor:pointer;">
+                                                                                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
+                                                                                                                            width:100%; cursor:pointer;">
                             🚪 Log out
                         </button>
                     </form>
@@ -99,8 +99,12 @@
 
             {{-- Search & Filter --}}
             <div class="search-section">
-                <div class="search-row">
-                    <input type=" text" id="searchInput" placeholder="🔍 Search jobs or companies...">
+                <div class="search-row" style="position:relative;">
+                    <input type="text" id="searchInput" placeholder="🔍  Search jobs or companies...">
+                    <button id="clearSearch" onclick="clearSearch()"
+                        style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:#888; font-size:16px; cursor:pointer; display:none;">
+                        ✕
+                    </button>
                 </div>
                 <div class="filter-row">
                     <select id="filterType">
@@ -272,7 +276,19 @@
             resultsCount.textContent = `${count} jobs found`;
         }
 
-        searchInput.addEventListener('input', filterJobs);
+
+        function clearSearch() {
+            searchInput.value = '';
+            document.getElementById('clearSearch').style.display = 'none';
+            filterJobs();
+        }
+
+        searchInput.addEventListener('input', () => {
+            document.getElementById('clearSearch').style.display =
+                searchInput.value ? 'block' : 'none';
+            filterJobs();
+        });
+
         filterType.addEventListener('change', filterJobs);
         filterLocation.addEventListener('change', filterJobs);
         filterSalary.addEventListener('change', filterJobs);
