@@ -7,280 +7,7 @@
     <title>TechHire - Find Your Next Job</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        :root {
-            --purple: #6C63FF;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Navbar */
-        .navbar-custom {
-            background-color: #fff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .brand {
-            color: var(--purple);
-            font-weight: 700;
-            font-size: 20px;
-            text-decoration: none;
-        }
-
-        .btn-purple {
-            background-color: var(--purple);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 7px 16px;
-            text-decoration: none;
-            font-size: 13px;
-            display: inline-block;
-        }
-
-        .btn-purple:hover {
-            background-color: #5a52d5;
-            color: white;
-        }
-
-        .btn-outline-purple {
-            border: 2px solid var(--purple);
-            color: var(--purple);
-            border-radius: 20px;
-            padding: 5px 14px;
-            text-decoration: none;
-            font-size: 13px;
-            background: white;
-            display: inline-block;
-        }
-
-        .btn-outline-purple:hover {
-            background-color: var(--purple);
-            color: white;
-        }
-
-        /* Map */
-        #map {
-            width: 100%;
-            height: 280px;
-        }
-
-        /* Search */
-        .search-section {
-            padding: 12px 16px;
-            background: white;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .search-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .search-row input {
-            flex: 1;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px !important;
-            padding: 8px 14px;
-            font-size: 13px;
-        }
-
-        .search-row input:focus {
-            outline: none;
-            border-color: var(--purple);
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .filter-row select {
-            flex: 1;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px !important;
-            padding: 7px 12px;
-            font-size: 12px;
-            background: white;
-            appearance: none;
-        }
-
-        .filter-row select:focus {
-            outline: none;
-            border-color: var(--purple);
-        }
-
-        /* Results */
-        .results-header {
-            padding: 10px 16px;
-            font-size: 12px;
-            color: #888;
-            background: #f0f2f5;
-        }
-
-        /* Job list */
-        .job-list {
-            padding: 0 16px 80px;
-        }
-
-        /* Job card */
-        .job-card {
-            background: white;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border-color 0.2s;
-        }
-
-        .job-card:hover,
-        .job-card.active {
-            border-color: var(--purple);
-        }
-
-        .job-title {
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 2px;
-            color: #1a1a2e;
-        }
-
-        .job-company {
-            color: #555;
-            font-size: 12px;
-            margin-bottom: 3px;
-        }
-
-        .job-location {
-            color: #888;
-            font-size: 12px;
-        }
-
-        .job-meta {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .badge-type {
-            background-color: #efe9ff;
-            color: var(--purple);
-            border-radius: 20px;
-            padding: 3px 10px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-salary {
-            background-color: #e9f7ef;
-            color: #27ae60;
-            border-radius: 20px;
-            padding: 3px 10px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .apply-btn {
-            margin-left: auto;
-            background-color: var(--purple);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 14px;
-            font-size: 11px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .apply-btn:hover {
-            background-color: #5a52d5;
-            color: white;
-        }
-
-        /* Desktop layout */
-        @media (min-width: 768px) {
-            .main-layout {
-                display: flex;
-                height: calc(100vh - 57px);
-            }
-
-            .left-panel {
-                width: 420px;
-                min-width: 320px;
-                display: flex;
-                flex-direction: column;
-                overflow: hidden;
-                border-right: 1px solid #e0e0e0;
-            }
-
-            .job-list-wrapper {
-                flex: 1;
-                overflow-y: auto;
-            }
-
-            #map {
-                flex: 1;
-                height: 100%;
-            }
-
-            .mobile-map {
-                display: none;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .desktop-map {
-                display: none;
-            }
-
-            .main-layout {
-                display: block;
-            }
-
-            .left-panel {
-                width: 100%;
-            }
-
-            .job-list-wrapper {
-                overflow: visible;
-            }
-        }
-
-        .btn-ghost {
-            background: none;
-            border: none;
-            color: #333;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-
-        .btn-ghost:hover {
-            background-color: #f0f2f5;
-        }
-    </style>
+    @vite(['resources/css/home.css', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -347,10 +74,11 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" style="display:flex; align-items:center; gap:10px; padding:12px 16px;
-                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
-                            width:100%; cursor:pointer;">
+                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
+                                            width:100%; cursor:pointer;">
                             🚪 Log out
-                            </button> </form>
+                        </button>
+                    </form>
                 </div>
             </div>
         @endif
@@ -380,13 +108,13 @@
                         <option value="part-time">Part-time</option>
                         <option value="contract">Contract</option>
                         <option value="internship">Internship</option>
-                        </select>
-                        <select id="filterLocation">
-                            <option value="">All Locations</option>
-                            @foreach($jobs->pluck('location')->unique() as $loc)
-                                <option value="{{ strtolower($loc) }}">{{ $loc }}</option>
-                            @endforeach
-                        </select>
+                    </select>
+                    <select id="filterLocation">
+                        <option value="">All Locations</option>
+                        @foreach($jobs->pluck('location')->unique() as $loc)
+                            <option value="{{ strtolower($loc) }}">{{ $loc }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
