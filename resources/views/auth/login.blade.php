@@ -34,7 +34,7 @@
     </style>
 
     <div class="text-center mb-4">
-        <p class="brand">JobBoard</p>
+        <p class="brand">TechHire</p>
         <p class="text-muted">Welcome back</p>
     </div>
 
