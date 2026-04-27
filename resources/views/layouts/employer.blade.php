@@ -23,8 +23,8 @@
             @if(isset($newApplications) && $newApplications > 0)
                 <span class="notif-badge">{{ $newApplications }} new</span>
             @endif
-            <a href="{{ route('employer.profile.edit') }}" class="btn-secondary-custom" style="padding: 7px 14px;">
-                Profile
+            <a href="{{ route('employer.profile.edit') }}" style="text-decoration:none;">
+                <div class="avatar">{{ substr(auth()->user()->name, 0, 1) }}</div>
             </a>
         </div>
     </nav>
@@ -32,9 +32,16 @@
     {{-- Sidebar --}}
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu" style="max-width: 280px;">
         <div class="offcanvas-header">
-            <div>
-                <h5 class="offcanvas-title">TechHire</h5>
-                <p style="font-size:12px; opacity:0.8; margin:0">{{ auth()->user()->name }}</p>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="avatar" style="background:white; color:var(--purple); border:none;">
+                    {{ substr(auth()->user()->name, 0, 1) }}
+                </div>
+                <div>
+                    <h5 class="offcanvas-title">{{ auth()->user()->name }}</h5>
+                    <p style="font-size:12px; opacity:0.8; margin:0;">
+                        {{ auth()->user()->employerProfile->company_name ?? '' }}
+                    </p>
+                </div>
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
