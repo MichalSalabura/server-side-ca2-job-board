@@ -75,8 +75,8 @@
                         @csrf
                         <button type="submit"
                             style="display:flex; align-items:center; gap:10px; padding:12px 16px;
-                                                                                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
-                                                                                                                            width:100%; cursor:pointer;">
+                                                                                                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
+                                                                                                                                            width:100%; cursor:pointer;">
                             🚪 Log out
                         </button>
                     </form>
@@ -185,7 +185,23 @@
         </div>
 
         {{-- Desktop Map --}}
-        <div class="desktop-map" id="map" style="flex:1;"></div>
+        <div class="desktop-map" style="flex:1; display:flex; flex-direction:column;">
+            <div id="map" style="flex:1;"></div>
+            <div id="jobDetail"
+                style="height:260px; background:white; border-top:1px solid #e0e0e0; padding:20px; overflow-y:auto; display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                    <div>
+                        <h3 id="detailTitle" style="font-size:16px; font-weight:700; margin:0 0 3px;"></h3>
+                        <p id="detailCompany" style="color:#555; font-size:13px; margin:0 0 3px;"></p>
+                        <p id="detailLocation" style="color:#888; font-size:12px; margin:0;"></p>
+                    </div>
+                    <div id="detailBadges" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+                </div>
+                <hr style="border:none; border-top:1px solid #e5e7eb; margin:12px 0;">
+                <p id="detailSalary" style="font-size:13px; color:#16a34a; font-weight:600; margin:0 0 8px;"></p>
+                <p id="detailDescription" style="font-size:13px; line-height:1.6; color:#333; margin:0;"></p>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -243,10 +259,27 @@
 
         function focusJob(id, lat, lng) {
             cards.forEach(c => c.classList.remove('active'));
-            document.querySelector(`[data-id="${id}"]`).classList.add('active');
+            const card = document.querySelector(`[data-id="${id}"]`);
+            card.classList.add('active');
+
             if (lat && lng) {
                 map.setView([lat, lng], 12);
                 if (markers[id]) markers[id].openPopup();
+            }
+
+            if (!isMobile) {
+                const detail = document.getElementById('jobDetail');
+                detail.style.display = 'block';
+                document.getElementById('detailTitle').innerText = card.querySelector('.job-title').innerText;
+                document.getElementById('detailCompany').innerText = card.querySelector('.job-company').innerText;
+                document.getElementById('detailLocation').innerText = card.querySelector('.job-location').innerText;
+
+                const salary = card.dataset.salary;
+                const salaryEl = document.getElementById('detailSalary');
+                salaryEl.innerText = salary && salary !== '0' ? '€' + parseInt(salary).toLocaleString() + '+' : '';
+
+                const badges = document.getElementById('detailBadges');
+                badges.innerHTML = `<span style="background:#efe9ff; color:#6C63FF; border-radius:6px; padding:3px 10px; font-size:11px; font-weight:600;">${card.dataset.type}</span>`;
             }
         }
 
