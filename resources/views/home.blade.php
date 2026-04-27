@@ -74,8 +74,8 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" style="display:flex; align-items:center; gap:10px; padding:12px 16px;
-                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
-                                                            width:100%; cursor:pointer;">
+                                                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
+                                                                                            width:100%; cursor:pointer;">
                             🚪 Log out
                         </button>
                     </form>
@@ -116,6 +116,17 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="filter-row" style="margin-top: 8px;">
+                    <select id="filterSalary">
+                        <option value="">All Salaries</option>
+                        <option value="30000">€30,000+</option>
+                        <option value="40000">€40,000+</option>
+                        <option value="50000">€50,000+</option>
+                        <option value="60000">€60,000+</option>
+                        <option value="70000">€70,000+</option>
+                        <option value="90000">€90,000+</option>
+                    </select>
+                </div>
             </div>
 
             <div class="results-header" id="resultsCount">{{ $jobs->count() }} jobs found</div>
@@ -128,6 +139,7 @@
                             data-company="{{ strtolower($job->company_name) }}" data-type="{{ $job->type }}"
                             data-location="{{ strtolower($job->location) }}" data-lat="{{ $job->latitude }}"
                             data-lng="{{ $job->longitude }}" data-id="{{ $job->id }}"
+                            data-salary="{{ preg_replace('/[^0-9]/', '', explode('-', $job->salary ?? '0')[0]) }}"
                             onclick="focusJob({{ $job->id }}, {{ $job->latitude ?? 'null' }}, {{ $job->longitude ?? 'null' }})">
                             <div class="job-title">{{ $job->title }}</div>
                             <div class="job-company">{{ $job->company_name }}</div>
@@ -221,18 +233,21 @@
         const filterType = document.getElementById('filterType');
         const filterLocation = document.getElementById('filterLocation');
         const resultsCount = document.getElementById('resultsCount');
+        const filterSalary = document.getElementById('filterSalary');
 
         function filterJobs() {
             const search = searchInput.value.toLowerCase();
             const type = filterType.value;
             const location = filterLocation.value;
+            const salary = filterSalary.value;
             let count = 0;
 
             cards.forEach(card => {
                 const titleMatch = card.dataset.title.includes(search) || card.dataset.company.includes(search);
                 const typeMatch = type === '' || card.dataset.type === type;
                 const locationMatch = location === '' || card.dataset.location === location;
-                const visible = titleMatch && typeMatch && locationMatch;
+                const salaryMatch = salary === '' || parseInt(card.dataset.salary) >= parseInt(salary);
+                const visible = titleMatch && typeMatch && locationMatch && salaryMatch;
                 card.style.display = visible ? 'block' : 'none';
                 if (visible) count++;
             });
@@ -243,6 +258,7 @@
         searchInput.addEventListener('input', filterJobs);
         filterType.addEventListener('change', filterJobs);
         filterLocation.addEventListener('change', filterJobs);
+        filterSalary.addEventListener('change', filterJobs);
     </script>
 </body>
 
