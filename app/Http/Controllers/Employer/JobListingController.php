@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Employer;
 use App\Http\Controllers\Controller;
 use App\Models\JobListing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Laravel\Pail\ValueObjects\Origin\Console;
 
 class JobListingController extends Controller
 {
@@ -28,12 +30,16 @@ class JobListingController extends Controller
             'type' => ['required', 'in:full-time,part-time,contract,internship'],
         ]);
 
+        $coords = $this->geocodeLocation($request->location);
+
         JobListing::create([
             'user_id' => auth()->id(),
-            'company_name',
+            'company_name' => $request->company_name,
             'title' => $request->title,
             'description' => $request->description,
             'location' => $request->location,
+            'latitude' => $coords['latitude'],
+            'longitude' => $coords['longitude'],
             'salary' => $request->salary,
             'type' => $request->type,
         ]);
@@ -59,7 +65,6 @@ class JobListingController extends Controller
 
     public function update(Request $request, JobListing $jobListing)
     {
-
         if ($jobListing->user_id !== auth()->id()) {
             abort(403);
         }
@@ -72,7 +77,12 @@ class JobListingController extends Controller
             'type' => ['required', 'in:full-time,part-time,contract,internship'],
         ]);
 
-        $jobListing->update($request->all());
+        $coords = $this->geocodeLocation($request->location);
+
+        $jobListing->update(array_merge($request->all(), [
+            'latitude' => $coords['latitude'],
+            'longitude' => $coords['longitude'],
+        ]));
 
         return redirect()->route('job-listings.index')->with('success', 'Job listing updated successfully.');
     }
@@ -82,8 +92,33 @@ class JobListingController extends Controller
         if ($jobListing->user_id !== auth()->id()) {
             abort(403);
         }
-
         $jobListing->delete();
         return redirect()->route('job-listings.index')->with('success', 'Job listing deleted.');
+    }
+
+    private function geocodeLocation(string $location): array
+    {
+        try {
+            $response = Http::withHeaders([
+                'User-Agent' => 'TechHire/1.0'
+            ])->withoutVerifying()->get('https://nominatim.openstreetmap.org/search', [
+                        'q' => $location,
+                        'format' => 'json',
+                        'limit' => 1,
+                    ]);
+
+            $data = $response->json();
+
+            if (!empty($data) && isset($data[0]['lat'])) {
+                return [
+                    'latitude' => $data[0]['lat'],
+                    'longitude' => $data[0]['lon'],
+                ];
+            }
+        } catch (\Exception $e) {
+            // fail silently
+        }
+
+        return ['latitude' => null, 'longitude' => null];
     }
 }

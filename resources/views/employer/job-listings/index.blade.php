@@ -2,46 +2,54 @@
 @section('title', 'My Job Listings')
 
 @section('content')
-    <h5 class="fw-bold mb-3">My Job Listings</h5>
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <h1 class="page-title">My Listings</h1>
+            <p class="page-subtitle">{{ $jobs->count() }} total listings</p>
+        </div>
+        <a href="{{ route('job-listings.create') }}" class="btn-primary-custom">+ Post Job</a>
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert-success-custom">{{ session('success') }}</div>
     @endif
 
-    <div class="row g-3">
-        @if($jobs->isEmpty())
-            <div class="col-12">
-                <p class="text-muted text-center">No job listings yet.</p>
-            </div>
-        @else
-            @foreach($jobs as $job)
-                <div class="col-6">
-                    <div class="job-card h-100">
-                        <p class="fw-bold mb-1" style="font-size:14px">{{ $job->title }}</p>
-                        <p class="text-muted mb-1" style="font-size:12px">{{ $job->location }}</p>
-                        <span class="badge mb-2" style="background-color: var(--purple); font-size:10px">{{ $job->type }}</span>
-                        <br>
-                        <span class="badge {{ $job->status === 'open' ? 'bg-success' : 'bg-secondary' }} mb-2"
-                            style="font-size:10px">{{ $job->status }}</span>
-                        <div class="mt-2 d-flex gap-1 flex-wrap">
-                            <a href="{{ route('job-listings.show', $job) }}" class="btn btn-sm btn-purple"
-                                style="font-size:11px">View</a>
-                            <a href="{{ route('job-listings.edit', $job) }}" class="btn btn-sm btn-outline-purple"
-                                style="font-size:11px">Edit</a>
-                            <form method="POST" action="{{ route('job-listings.destroy', $job) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" style="font-size:11px; border-radius:20px"
-                                    onclick="return confirm('Delete this job?')">Delete</button>
-                            </form>
-                        </div>
+    @if($jobs->isEmpty())
+        <div class="card-custom" style="text-align:center; padding: 40px 20px;">
+            <p style="color: var(--text-muted); margin:0; font-size:14px;">No job listings yet.</p>
+        </div>
+    @else
+        @foreach($jobs as $job)
+            <div class="card-custom">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                    <div>
+                        <p style="font-weight:700; font-size:15px; margin:0 0 3px;">{{ $job->title }}</p>
+                        <p style="color:var(--text-muted); font-size:12px; margin:0;">{{ $job->company_name }} · 📍
+                            {{ $job->location }}</p>
                     </div>
+                    <span class="{{ $job->status === 'open' ? 'badge-open' : 'badge-closed' }}">{{ $job->status }}</span>
                 </div>
-            @endforeach
-        @endif
-    </div>
-
-    <div class="mt-4">
-        <a href="{{ route('job-listings.create') }}" class="btn btn-purple w-100">+ Post New Job</a>
-    </div>
+                <div style="display:flex; gap:6px; margin-bottom:12px;">
+                    <span class="badge-type">{{ $job->type }}</span>
+                    @if($job->salary)
+                        <span
+                            style="background:#f0fdf4; color:#16a34a; border-radius:6px; padding:3px 10px; font-size:11px; font-weight:600;">{{ $job->salary }}</span>
+                    @endif
+                </div>
+                <hr class="divider" style="margin: 12px 0;">
+                <div style="display:flex; gap:8px;">
+                    <a href="{{ route('job-listings.show', $job) }}" class="btn-primary-custom"
+                        style="flex:1; text-align:center; padding:8px;">View</a>
+                    <a href="{{ route('job-listings.edit', $job) }}" class="btn-secondary-custom"
+                        style="flex:1; text-align:center; padding:8px;">Edit</a>
+                    <form method="POST" action="{{ route('job-listings.destroy', $job) }}" style="flex:1;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn-danger-custom" style="width:100%; padding:8px;"
+                            onclick="return confirm('Delete this job?')">Delete</button>
+                    </form>
+                </div>
+            </div>
+        @endforeach
+    @endif
 @endsection

@@ -15,6 +15,8 @@ class JobListing extends Model
         'salary',
         'type',
         'status',
+        'latitude',
+        'longitude'
     ];
     public function user()
     {
