@@ -266,6 +266,20 @@
                 overflow: visible;
             }
         }
+
+        .btn-ghost {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .btn-ghost:hover {
+            background-color: #f0f2f5;
+        }
     </style>
 </head>
 
@@ -273,7 +287,17 @@
 
     {{-- Navbar --}}
     <nav class="navbar-custom">
-        <a href="/" class="brand">TechHire</a>
+        <div style="display:flex; align-items:center; gap:10px;">
+            @auth
+                @if(auth()->user()->role === 'employer')
+                    <button class="btn-ghost" type="button" data-bs-toggle="offcanvas" data-bs-target="#homeSidebar"
+                        style="padding: 8px 12px;">
+                        ☰
+                    </button>
+                @endif
+            @endauth
+            <a href="/" class="brand">TechHire</a>
+        </div>
         <div style="display:flex; gap:8px; align-items:center;">
             @auth
                 @if(auth()->user()->role === 'employer')
@@ -287,6 +311,51 @@
             @endauth
         </div>
     </nav>
+
+    @auth
+        @if(auth()->user()->role === 'employer')
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="homeSidebar" style="max-width: 280px;">
+                <div class="offcanvas-header" style="background-color: #6C63FF; color: white; padding: 20px;">
+                    <div>
+                        <h5 style="margin:0; font-weight:700;">TechHire</h5>
+                        <p style="font-size:12px; opacity:0.8; margin:0;">{{ auth()->user()->name }}</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body" style="padding: 16px;">
+                    <a href="{{ url('/') }}"
+                        style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; text-decoration:none; color:#1a1a2e; font-size:14px; font-weight:500; margin-bottom:4px;">
+                        🏠 Homepage
+                    </a>
+                    <a href="{{ route('employer.dashboard') }}"
+                        style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; text-decoration:none; color:#1a1a2e; font-size:14px; font-weight:500; margin-bottom:4px;">
+                        📊 Dashboard
+                    </a>
+                    <a href="{{ route('job-listings.index') }}"
+                        style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; text-decoration:none; color:#1a1a2e; font-size:14px; font-weight:500; margin-bottom:4px;">
+                        📋 My Postings
+                    </a>
+                    <a href="{{ route('job-listings.create') }}"
+                        style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; text-decoration:none; color:#1a1a2e; font-size:14px; font-weight:500; margin-bottom:4px;">
+                        ➕ Post a Job
+                    </a>
+                    <a href="{{ route('employer.profile.edit') }}"
+                        style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; text-decoration:none; color:#1a1a2e; font-size:14px; font-weight:500; margin-bottom:4px;">
+                        🏢 Company Profile
+                    </a>
+                    <hr style="border:none; border-top:1px solid #e5e7eb; margin:12px 0;">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" style="display:flex; align-items:center; gap:10px; padding:12px 16px;
+                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
+                            width:100%; cursor:pointer;">
+                            🚪 Log out
+                            </button> </form>
+                </div>
+            </div>
+        @endif
+    @endauth
+
 
     {{-- Mobile map (shows above job list on mobile) --}}
     <div class="mobile-map">
@@ -302,7 +371,7 @@
             {{-- Search & Filter --}}
             <div class="search-section">
                 <div class="search-row">
-                    <input type="text" id="searchInput" placeholder="🔍  Search jobs or companies...">
+                    <input type=" text" id="searchInput" placeholder="🔍 Search jobs or companies...">
                 </div>
                 <div class="filter-row">
                     <select id="filterType">
@@ -311,13 +380,13 @@
                         <option value="part-time">Part-time</option>
                         <option value="contract">Contract</option>
                         <option value="internship">Internship</option>
-                    </select>
-                    <select id="filterLocation">
-                        <option value="">All Locations</option>
-                        @foreach($jobs->pluck('location')->unique() as $loc)
-                            <option value="{{ strtolower($loc) }}">{{ $loc }}</option>
-                        @endforeach
-                    </select>
+                        </select>
+                        <select id="filterLocation">
+                            <option value="">All Locations</option>
+                            @foreach($jobs->pluck('location')->unique() as $loc)
+                                <option value="{{ strtolower($loc) }}">{{ $loc }}</option>
+                            @endforeach
+                        </select>
                 </div>
             </div>
 
