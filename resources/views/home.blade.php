@@ -74,8 +74,8 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" style="display:flex; align-items:center; gap:10px; padding:12px 16px;
-                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
-                                            width:100%; cursor:pointer;">
+                                                            border-radius:10px; color:#ef4444; font-size:14px; font-weight:500; background:none; border:none;
+                                                            width:100%; cursor:pointer;">
                             🚪 Log out
                         </button>
                     </form>
@@ -138,9 +138,11 @@
                                     <span class="badge-salary">{{ $job->salary }}</span>
                                 @endif
                                 @auth
-                                    <a href="#" class="apply-btn">Apply</a>
+                                    @if(auth()->user()->role === 'jobseeker')
+                                        <a href="#" class="apply-btn">Apply</a>
+                                    @endif
                                 @else
-                                    <a href="{{ route('login') }}" class="apply-btn">Apply</a>
+                                    <a href="{{ route('login') }}" class="apply-btn">Login to Apply</a>
                                 @endauth
                             </div>
                         </div>
