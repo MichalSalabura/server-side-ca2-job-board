@@ -35,7 +35,7 @@ jobs:
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
       - name: Install Node dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build frontend assets
         run: npm run build
